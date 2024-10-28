@@ -1,6 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
+
 #include "sim_bp.h"
 
 /*  argc holds the number of command line arguments
@@ -14,13 +16,13 @@
     argv[2] = "6"
     ... and so on
 */
-int main (int argc, char* argv[])
-{
+int main (int argc, char* argv[]) {
     FILE *FP;               // File handler
     char *trace_file;       // Variable that holds trace file name;
     bp_params params;       // look at sim_bp.h header file for the the definition of struct bp_params
-    char outcome;           // Variable holds branch outcome
+    bool outcome;           // Variable holds branch outcome, true = taken; false = not taken
     unsigned long int addr; // Variable holds the address read from input file
+    BranchPredictor BP;
     
     if (!(argc == 4 || argc == 5 || argc == 7))
     {
@@ -41,6 +43,7 @@ int main (int argc, char* argv[])
         params.M2       = strtoul(argv[2], NULL, 10);
         trace_file      = argv[3];
         printf("COMMAND\n%s %s %lu %s\n", argv[0], params.bp_name, params.M2, trace_file);
+        BP.BP_Init(params.M2, 0);
     }
     else if(strcmp(params.bp_name, "gshare") == 0)          // Gshare
     {
@@ -89,14 +92,18 @@ int main (int argc, char* argv[])
     while(fscanf(FP, "%lx %s", &addr, str) != EOF)
     {
         
-        outcome = str[0];
-        if (outcome == 't')
-            printf("%lx %s\n", addr, "t");           // Print and test if file is read correctly
-        else if (outcome == 'n')
-            printf("%lx %s\n", addr, "n");          // Print and test if file is read correctly
+        outcome = (str[0] == 't') ? true : false;
+        if(!strcmp(params.bp_name, "bimodal")) {
+            BP.Impl_Bimodal(addr, outcome);
+        }
+        // if (outcome == 't')
+        //     printf("%lx %s\n", addr, "t");           // Print and test if file is read correctly
+        // else if (outcome == 'n')
+        //     printf("%lx %s\n", addr, "n");          // Print and test if file is read correctly
         /*************************************
             Add branch predictor code here
         **************************************/
     }
+    BP.Print_Contents();
     return 0;
 }
