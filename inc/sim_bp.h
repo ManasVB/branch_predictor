@@ -27,17 +27,19 @@ class BranchPredictor {
     uint32_t num_mispredictions;
 
     uint8_t *prediction_table;
+    uint32_t gbhr;  // Global Branch History Register
     std::string predictor;
 
     BranchPredictor() = default;
     ~BranchPredictor() = default;
 
-    uint32_t parseBranchPC(uint32_t, uint32_t);
+    uint32_t parseBranchPC(uint32_t);
 
-    void BP_Init(uint32_t, uint32_t);
+    void BP_Init(uint32_t, uint32_t, std::string);
     void Print_Contents(void);
 
     void Impl_Bimodal(uint32_t, bool);
+    void Impl_Gshare(uint32_t, bool);
 };
 
 #endif

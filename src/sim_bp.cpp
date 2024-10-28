@@ -43,7 +43,7 @@ int main (int argc, char* argv[]) {
         params.M2       = strtoul(argv[2], NULL, 10);
         trace_file      = argv[3];
         printf("COMMAND\n%s %s %lu %s\n", argv[0], params.bp_name, params.M2, trace_file);
-        BP.BP_Init(params.M2, 0);
+        BP.BP_Init(params.M2, 0, "BIMODAL");
     }
     else if(strcmp(params.bp_name, "gshare") == 0)          // Gshare
     {
@@ -56,7 +56,7 @@ int main (int argc, char* argv[]) {
         params.N        = strtoul(argv[3], NULL, 10);
         trace_file      = argv[4];
         printf("COMMAND\n%s %s %lu %lu %s\n", argv[0], params.bp_name, params.M1, params.N, trace_file);
-
+        BP.BP_Init(params.M1, params.N, "GSHARE");
     }
     else if(strcmp(params.bp_name, "hybrid") == 0)          // Hybrid
     {
@@ -95,6 +95,8 @@ int main (int argc, char* argv[]) {
         outcome = (str[0] == 't') ? true : false;
         if(!strcmp(params.bp_name, "bimodal")) {
             BP.Impl_Bimodal(addr, outcome);
+        } else if(!strcmp(params.bp_name, "gshare")) {
+            BP.Impl_Gshare(addr, outcome);
         }
         // if (outcome == 't')
         //     printf("%lx %s\n", addr, "t");           // Print and test if file is read correctly
