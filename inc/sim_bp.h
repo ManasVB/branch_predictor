@@ -32,9 +32,9 @@ class BranchPredictor {
     BranchPredictor() = default;
     ~BranchPredictor() = default;
 
-    uint32_t parseBranchPC(uint32_t, uint32_t);
+    uint32_t parseBranchPC(uint32_t);
 
-    void BP_Init(uint32_t, uint32_t);
+    void BP_Init(uint32_t, uint32_t, std::string);
     void Print_Contents(void);
 
     void Impl_Bimodal(uint32_t, bool);

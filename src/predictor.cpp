@@ -7,7 +7,10 @@
 
 using namespace std;
 
-void BranchPredictor :: BP_Init(uint32_t m, uint32_t n) {
+void BranchPredictor :: BP_Init(uint32_t m, uint32_t n, std::string bp_name) {
+
+  predictor = bp_name;
+
   this->m = m;
   this->n = n;
   this->PT_len = (unsigned)pow(2,m);
@@ -19,15 +22,15 @@ void BranchPredictor :: BP_Init(uint32_t m, uint32_t n) {
   this->num_mispredictions = 0;
 }
 
-uint32_t BranchPredictor :: parseBranchPC(uint32_t addr, uint32_t m) {
+uint32_t BranchPredictor :: parseBranchPC(uint32_t addr) {
     uint32_t shifted = addr >> 2; // Discard the lower 2 PC bits
-    uint32_t mask = (1U << m) - 1U;
+    uint32_t mask = (1U << this->m) - 1U;
     return (shifted & mask);
 }
 
 void BranchPredictor:: Impl_Bimodal(uint32_t addr, bool outcome) {
   ++(this->num_predictions);
-  uint32_t PT_Index = parseBranchPC(addr, this->m);
+  uint32_t PT_Index = parseBranchPC(addr);
   uint8_t prediction = this->prediction_table[PT_Index];
 
   if(!((prediction < 2 && !outcome) || (prediction >=2 && outcome))) {
@@ -51,7 +54,7 @@ void BranchPredictor :: Print_Contents() {
   float misprediction_rate = (float)this->num_mispredictions/(float)this->num_predictions;
   std::cout << "misprediction rate:\t" << misprediction_rate*100 << "%" << std::endl;
 
-  std::cout << "FINAL\t" << "BIMODAL CONTENTS" << std::endl;
+  std::cout << "FINAL\t" << this->predictor << " CONTENTS" << std::endl;
   for(uint32_t i = 0; i < this->PT_len; ++i) {
     std::cout << i << "\t" << (unsigned)this->prediction_table[i] << std::endl;
   }
