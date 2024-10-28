@@ -95,6 +95,8 @@ int main (int argc, char* argv[]) {
         outcome = (str[0] == 't') ? true : false;
         if(!strcmp(params.bp_name, "bimodal")) {
             BP.Impl_Bimodal(addr, outcome);
+        } else if(!strcmp(params.bp_name, "gshare")) {
+            BP.Impl_Gshare(addr, outcome);
         }
         // if (outcome == 't')
         //     printf("%lx %s\n", addr, "t");           // Print and test if file is read correctly
