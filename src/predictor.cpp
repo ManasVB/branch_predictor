@@ -45,11 +45,11 @@ void BranchPredictor:: Impl_Bimodal(uint32_t addr, bool outcome) {
 
 void BranchPredictor :: Print_Contents() {
   std::cout << "OUTPUT" << std::endl;
-  std::cout << "number of predictions:" << this->num_predictions << std::endl;
-  std::cout << std::fixed << std::setprecision(2) << "number of predictions:" << this->num_mispredictions << std::endl;
+  std::cout << "number of predictions:\t" << this->num_predictions << std::endl;
+  std::cout << std::fixed << std::setprecision(2) << "number of mispredictions:\t" << this->num_mispredictions << std::endl;
   
   float misprediction_rate = (float)this->num_mispredictions/(float)this->num_predictions;
-  std::cout << "misprediction rate:" << misprediction_rate*100 << "%" << std::endl;
+  std::cout << "misprediction rate:\t" << misprediction_rate*100 << "%" << std::endl;
 
   std::cout << "FINAL\t" << "BIMODAL CONTENTS" << std::endl;
   for(uint32_t i = 0; i < this->PT_len; ++i) {
