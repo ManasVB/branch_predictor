@@ -1,5 +1,7 @@
 #include<iostream>
 #include <cstring>
+#include <iomanip>
+
 #include <cmath>
 #include "sim_bp.h"
 
@@ -19,7 +21,7 @@ void BranchPredictor :: BP_Init(uint32_t m, uint32_t n) {
 
 uint32_t BranchPredictor :: parseBranchPC(uint32_t addr, uint32_t m) {
     uint32_t shifted = addr >> 2; // Discard the lower 2 PC bits
-    uint32_t mask = (1U << (m-1)) - 1U;
+    uint32_t mask = (1U << m) - 1U;
     return (shifted & mask);
 }
 
@@ -44,10 +46,10 @@ void BranchPredictor:: Impl_Bimodal(uint32_t addr, bool outcome) {
 void BranchPredictor :: Print_Contents() {
   std::cout << "OUTPUT" << std::endl;
   std::cout << "number of predictions:" << this->num_predictions << std::endl;
-  std::cout << "number of predictions:" << this->num_mispredictions << std::endl;
+  std::cout << std::fixed << std::setprecision(2) << "number of predictions:" << this->num_mispredictions << std::endl;
   
-  float misprediction_rate = this->num_mispredictions/this->num_predictions;
-  std::cout << "misprediction rate:" << misprediction_rate << std::endl;
+  float misprediction_rate = (float)this->num_mispredictions/(float)this->num_predictions;
+  std::cout << "misprediction rate:" << misprediction_rate*100 << "%" << std::endl;
 
   std::cout << "FINAL\t" << "BIMODAL CONTENTS" << std::endl;
   for(uint32_t i = 0; i < this->PT_len; ++i) {
