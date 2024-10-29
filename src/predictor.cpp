@@ -80,7 +80,7 @@ void Impl_Hybrid(uint32_t addr, bool outcome) {
   uint32_t mask = (1U << K) - 1U;
   uint32_t CT_Index = shifted & mask;
 
-  if(chooser_table[CT_Index] > 2) {
+  if(chooser_table[CT_Index] >= 2) {
     BP_g.Impl_Gshare(addr, outcome);
   } else{
     BP_b.Impl_Bimodal(addr, outcome);
