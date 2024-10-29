@@ -37,10 +37,15 @@ uint32_t BranchPredictor :: parseBranchPC(uint32_t addr) {
     return ((xor_n << (m-n)) | PC_new_m_n); // return the prediction_table index
 }
 
+uint8_t BranchPredictor :: Prediction_Value(uint32_t addr, uint32_t &PT_Index) {
+  PT_Index = parseBranchPC(addr);
+  return this->prediction_table[PT_Index];
+}
+
 void BranchPredictor:: Impl_Bimodal(uint32_t addr, bool outcome) {
   ++(this->num_predictions);
-  uint32_t PT_Index = parseBranchPC(addr);
-  uint8_t prediction = this->prediction_table[PT_Index];
+  uint32_t PT_Index = 0;
+  uint8_t prediction = Prediction_Value(addr, PT_Index);
 
   if(!((prediction < 2 && !outcome) || (prediction >=2 && outcome))) {
     ++(this->num_mispredictions);

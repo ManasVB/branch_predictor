@@ -38,6 +38,7 @@ class BranchPredictor {
     void BP_Init(uint32_t, uint32_t, std::string);
     void Print_Contents(void);
 
+    uint8_t Prediction_Value(uint32_t, uint32_t &);
     void Impl_Bimodal(uint32_t, bool);
     void Impl_Gshare(uint32_t, bool);
 };
