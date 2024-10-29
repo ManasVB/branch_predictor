@@ -2,9 +2,14 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdint>
+#include <cmath>
+#include <iomanip>
 
 #include "sim_bp.h"
 
+uint8_t *chooser_table;
+uint32_t K = 0, CT_len;
+BranchPredictor BP_g, BP_b;
 /*  argc holds the number of command line arguments
     argv[] holds the commands themselves
 
@@ -72,6 +77,13 @@ int main (int argc, char* argv[]) {
         trace_file      = argv[6];
         printf("COMMAND\n%s %s %lu %lu %lu %lu %s\n", argv[0], params.bp_name, params.K, params.M1, params.N, params.M2, trace_file);
 
+        K = params.K;
+        CT_len = (unsigned)pow(2,K);
+        chooser_table = new uint8_t[CT_len];
+        std::fill_n(chooser_table, CT_len, 1); // Initial fill of 1
+
+        BP_b.BP_Init(params.M2, 0, "BIMODAL");
+        BP_g.BP_Init(params.M1, params.N, "GSHARE");
     }
     else
     {
@@ -97,6 +109,8 @@ int main (int argc, char* argv[]) {
             BP.Impl_Bimodal(addr, outcome);
         } else if(!strcmp(params.bp_name, "gshare")) {
             BP.Impl_Gshare(addr, outcome);
+        } else if(!strcmp(params.bp_name, "hybrid")) {
+            Impl_Hybrid(addr, outcome);
         }
         // if (outcome == 't')
         //     printf("%lx %s\n", addr, "t");           // Print and test if file is read correctly
@@ -106,6 +120,34 @@ int main (int argc, char* argv[]) {
             Add branch predictor code here
         **************************************/
     }
-    BP.Print_Contents();
+    if(strcmp(params.bp_name, "hybrid"))
+        BP.Print_Contents();
+    else {
+        std::cout << "OUTPUT" << std::endl;
+
+        uint32_t num_predictions = (BP_b.num_predictions + BP_g.num_predictions);
+        uint32_t num_mispredictions = (BP_b.num_mispredictions + BP_g.num_mispredictions);
+
+        std::cout << "number of predictions:\t" << num_predictions << std::endl;
+        std::cout << "number of mispredictions:\t" << num_mispredictions << std::endl;
+        
+        float misprediction_rate = (float)num_mispredictions/(float)num_predictions;
+        std::cout << std::fixed << std::setprecision(2) << "misprediction rate:\t" << misprediction_rate*100 << "%" << std::endl;
+
+        std::cout << "FINAL\t" << "CHOOSER CONTENTS" << std::endl;
+        for(uint32_t i = 0; i < CT_len; ++i) {
+            std::cout << i << "\t" << (unsigned)chooser_table[i] << std::endl;
+        }
+
+        std::cout << "FINAL\t" << "GSHARE CONTENTS" << std::endl;
+        for(uint32_t i = 0; i < BP_g.PT_len; ++i) {
+            std::cout << i << "\t" << (unsigned)BP_g.prediction_table[i] << std::endl;
+        }
+
+        std::cout << "FINAL\t" << "BIMODAL CONTENTS" << std::endl;
+        for(uint32_t i = 0; i < BP_b.PT_len; ++i) {
+            std::cout << i << "\t" << (unsigned)BP_b.prediction_table[i] << std::endl;
+        }
+    }
     return 0;
 }

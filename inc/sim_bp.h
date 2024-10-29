@@ -15,13 +15,11 @@ typedef struct bp_params{
 // Put additional data structures here as per your requirement
 
 class BranchPredictor {
-    private:
+    public:
 
     uint32_t m;
     uint32_t n;
     uint32_t PT_len;  // Prediction Table length
-
-    public:
 
     uint32_t num_predictions;
     uint32_t num_mispredictions;
@@ -38,8 +36,11 @@ class BranchPredictor {
     void BP_Init(uint32_t, uint32_t, std::string);
     void Print_Contents(void);
 
+    uint8_t Prediction_Value(uint32_t, uint32_t &);
     void Impl_Bimodal(uint32_t, bool);
     void Impl_Gshare(uint32_t, bool);
 };
+
+void Impl_Hybrid(uint32_t, bool);
 
 #endif
