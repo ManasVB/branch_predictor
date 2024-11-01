@@ -68,7 +68,8 @@ void BranchPredictor :: Impl_Gshare(uint32_t addr, bool outcome) {
 
   this->Impl_Bimodal(addr, outcome);
 
-  gbhr = (outcome << (n-1) | (gbhr >> 1));
+  if(n > 0)
+    gbhr = (outcome << (n-1) | (gbhr >> 1));
 }
 
 void Impl_Hybrid(uint32_t addr, bool outcome) {
@@ -84,7 +85,8 @@ void Impl_Hybrid(uint32_t addr, bool outcome) {
     BP_g.Impl_Gshare(addr, outcome);
   } else{
     BP_b.Impl_Bimodal(addr, outcome);
-    BP_g.gbhr = (outcome << (BP_g.n-1) | (BP_g.gbhr >> 1));
+    if(BP_g.n > 0)
+      BP_g.gbhr = (outcome << (BP_g.n-1) | (BP_g.gbhr >> 1));
   }
 
   bool gshare_correct = ((prediction_g < 2 && !outcome) || (prediction_g >=2 && outcome));
