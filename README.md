@@ -1,3 +1,8 @@
+## Dynamic Branch Predictor
+
+- Developed a sophisticated Dynamic Branch Prediction Simulator for Bimodal predictor (with a Branch History Table - BHT), Gshare predictor (with a global branch history register), and Hybrid predictor (Bimodal + Gshare) models.
+- Analyzed the predictability of different control flow behaviors across a set of workload traces from the SPECint95 benchmark suite.
+
 1. Type "make" to build.  (Type "make clean" first if you already compiled and want to recompile from scratch.)
 
 2. Run trace reader:
